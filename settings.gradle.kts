@@ -2,11 +2,10 @@
 
 pluginManagement {
     repositories {
-        // CRITICAL: Tells Gradle where to find the Android/Kotlin plugins
+        // CRITICAL FIX: The repository where the *plugin* is located must be here.
+        maven("https://jitpack.io") 
         google()
         mavenCentral()
-        // Tells Gradle where to find the CloudStream provider plugin
-        maven("https://jitpack.io")
     }
 }
 
