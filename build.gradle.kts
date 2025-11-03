@@ -5,12 +5,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        // CRITICAL: JitPack is where the CloudStream plugin lives
         maven("https://jitpack.io")
     }
     dependencies {
-        // FIX: CHANGING ARTIFACT NAME TO THE CORRECT JITPACK COORDINATE
-        classpath("com.github.Lagradost:CloudStream-3:1.4.2")
+        // FINAL FIX: Changing version to 'master-SNAPSHOT' to bypass 401 resolution error
+        classpath("com.github.Lagradost:CloudStream-3:master-SNAPSHOT") 
         classpath(kotlin("gradle-plugin", version = "1.9.24"))
         classpath("com.android.tools.build:gradle:8.5.1")
     }
