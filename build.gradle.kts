@@ -1,4 +1,4 @@
-// Root level build.gradle.kts - simplified
+// Root level build.gradle.kts
 
 plugins {
     // Define the base versions for Android and Kotlin
@@ -8,7 +8,7 @@ plugins {
     id("com.lagradost.cloudstream3.provider") version "1.4.2" apply false
 }
 
-// Define repositories for dependencies (not plugins)
+// Repositories for *dependencies* (not plugins)
 allprojects {
     repositories {
         google()
