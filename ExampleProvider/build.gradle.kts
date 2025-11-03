@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    // Dependency on the CloudStream app library
-    implementation("com.lagradost.cloudstream3:app:4.0.0")
+    // FINAL FIX: Changing dependency version to 'master-SNAPSHOT' to bypass 401 Unauthorized error
+    implementation("com.lagradost.cloudstream3:app:master-SNAPSHOT") 
 
     // Standard Android libraries
     implementation("com.google.android.material:material:1.12.0")
