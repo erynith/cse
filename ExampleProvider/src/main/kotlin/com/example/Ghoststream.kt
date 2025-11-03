@@ -3,43 +3,32 @@ package com.example
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.extractors.*
-import org.jsoup.nodes.Element // <-- FIX: Unresolved reference 'Element'
-import kotlin.collections.List
+import org.jsoup.nodes.Element // Added required import for Jsoup
 
 class GhoststreamProvider : MainAPI() {
-    // FIX: 'name' must be 'override val' in the current API version, or simply 'val'
-    override val name = "Ghoststream" 
     override var mainUrl = "https://example.com"
+    // FIX: Changed to 'val' to match modern MainAPI requirements.
+    override val name = "Ghoststream"
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Anime)
-    // FIX: 'lang' must be 'override val' in the current API version, or simply 'val'
-    override val lang = "en" 
+    // FIX: Changed to 'val' to match modern MainAPI requirements.
+    override val lang = "en"
 
     private val sources = listOf(
-        "2embed.cc",
-        "allanime.site", 
-        "allmovieland.ws",
-        "dramadrip.com",
-        "kisskh.co",
-        "kisskhasia.com",
-        "multimovies.cc",
-        "player4u.org", 
-        "showflix.in",
-        "vegamovies.nl",
-        "fmovies.to",
-        "soap2day.rs",
+        "2embed.cc", "allanime.site", "allmovieland.ws", "dramadrip.com",
+        "kisskh.co", "kisskhasia.com", "multimovies.cc", "player4u.org",
+        "showflix.in", "vegamovies.nl", "fmovies.to", "soap2day.rs",
         "movie4kto.net"
     )
 
-    // FIX: 'loadHomePage' overrides nothing error is fixed by updating dependencies (Step 1).
-    // The signature here is correct for recent API versions.
+    // FIX: Correct signature for loadHomePage (overrides should now work after dependency fix)
     override suspend fun loadHomePage(page: Int, request: MainPageRequest): HomePageResponse {
         val items = ArrayList<HomePageList>()
-        
+
         items.add(HomePageList("Latest Movies", getLatestMovies()))
         items.add(HomePageList("Popular TV Shows", getPopularTvShows()))
         items.add(HomePageList("Trending Anime", getTrendingAnime()))
-        
-        // FIX: 'constructor(...) is deprecated' error resolved by using helper function
+
+        // FIX: Use newHomePageResponse helper
         return newHomePageResponse(items)
     }
 
@@ -59,19 +48,14 @@ class GhoststreamProvider : MainAPI() {
                 "2embed.cc" -> "https://2embed.cc/search/$query"
                 "vegamovies.nl" -> "https://vegamovies.nl/?s=$query"
                 "fmovies.to" -> "https://fmovies.to/filter?keyword=$query"
-                // Assuming app.get().document is available via 'com.lagradost.cloudstream3.utils.*' import
-                else -> "https://$source/search?q=$query" 
+                else -> "https://$source/search?q=$query"
             }
-            
+
             val document = app.get(searchUrl).document
-            
-            // FIX: The select calls need to be handled carefully. 
-            // document.select("div, article") selects Element objects.
-            // The original code was likely inside a loop that iterated over results, which is missing here.
-            // Assuming this is a mock implementation for now:
-            document.select("div.result-item, article.post").take(5).mapNotNull { element -> // Changed selector for robustness
-                // FIX: 'constructor(...) is deprecated' error resolved by using helper function
-                newMovieSearchResponse( 
+            // Placeholder parsing for demonstration
+            document.select("div.result-item, article.post").take(5).mapNotNull { element ->
+                // FIX: Use newMovieSearchResponse helper
+                newMovieSearchResponse(
                     name = "Test from $source - $query",
                     url = "$source|https://example.com",
                     type = TvType.Movie,
@@ -88,7 +72,7 @@ class GhoststreamProvider : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val parts = url.split("|")
         if (parts.size != 2) return null
-        
+
         val title = "Movie from ${parts[0]}"
         // Use newMovieLoadResponse helper
         return newMovieLoadResponse(title, url, TvType.Movie, url) {
@@ -102,31 +86,29 @@ class GhoststreamProvider : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        
-        // Removed 'TwoEmbedExtractor' as it was an Unresolved reference.
-        // If it exists in your imports, add it back. Otherwise, CloudStream might not have it built-in.
+
+        // FIX: Removed 'TwoEmbedExtractor' which was an unresolved reference
         val extractors = listOf(
             StreamTape(),
             Mp4Upload(),
             DoodLaExtractor()
         )
-        
+
         val parts = data.split("|")
         if (parts.size != 2) return false
-        
+
         val url = parts[1]
-        
-        // Fixed extractor calls to use the correct method signature
+
         for (extractor in extractors) {
             try {
-                // FIX: 'None of the following candidates is applicable' resolved by using the full signature
+                // FIX: Correct getUrl signature (using null for referer)
                 extractor.getUrl(url, null, subtitleCallback, callback)
                 return true
             } catch (e: Exception) {
                 continue
             }
         }
-        
+
         return false
     }
 
