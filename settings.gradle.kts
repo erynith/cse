@@ -15,8 +15,8 @@ dependencyResolutionManagement {
             name = "cloudstream"
             url = uri("https://maven.pkg.github.com/recloudstream/cloudstream")
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = System.getenv("CS_USERNAME")
+                password = System.getenv("CS_TOKEN")
             }
         }
     }
