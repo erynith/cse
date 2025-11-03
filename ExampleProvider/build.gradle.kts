@@ -49,7 +49,7 @@ version = 1
 
 cloudstream {
     description = "A multi-source video provider"
-    authors = listOf("FlummoxGamer") // FIX: Changed to your username
+    authors = listOf("FlummoxGamer")
 
     /**
     * Status int as one of the following: 0: Down, 1: Ok, 2: Slow, 3: Beta-only
