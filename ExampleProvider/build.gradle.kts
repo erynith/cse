@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    // The core CloudStream app library (Version 4.0.0 is latest stable on Maven Central)
+    // The core CloudStream app library (Version 4.0.0 is latest stable)
     implementation("com.lagradost.cloudstream3:app:4.0.0") 
 
     // Standard Android libraries
