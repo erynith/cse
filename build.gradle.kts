@@ -1,9 +1,20 @@
-plugins {
-    id("com.android.application") version "8.1.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
 
-// Subprojects block is empty to avoid Gradle 8.x error
+// CRITICAL: Adding GitHub credentials for all projects
 subprojects {
-    // Repositories are now defined in settings.gradle.kts
+    repositories {
+        maven {
+            name = "cloudstream"
+            url = uri("https://api.github.com/repos/recloudstream/cloudstream-3/packages/maven")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
