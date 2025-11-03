@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FLUMMOX-Repo"
 include("ExampleProvider")
+include("GhostStreamProvider")
