@@ -2,7 +2,15 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        maven(url = "https://api.github.com/repos/recloudstream/cloudstream-3/packages/maven/cloudstream")
+        // CRITICAL: Adding the repository for the plugin
+        maven {
+            name = "cloudstream"
+            url = uri("https://api.github.com/repos/recloudstream/cloudstream-3/packages/maven")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
         gradlePluginPortal()
     }
 }
