@@ -1,19 +1,15 @@
-rootProject.name = "CloudstreamPlugins"
+// This file must be in the root directory.
 
-// This file sets what projects are included.
-// All new projects should get automatically included unless specified in the "disabled" variable.
-
-val disabled = listOf<String>()
-
-File(rootDir, ".").eachDir { dir ->
-    if (!disabled.contains(dir.name) && File(dir, "build.gradle.kts").exists()) {
-        include(dir.name)
+pluginManagement {
+    repositories {
+        // CRITICAL: Tells Gradle where to find the Android/Kotlin plugins
+        google()
+        mavenCentral()
+        // Tells Gradle where to find the CloudStream provider plugin
+        maven("https://jitpack.io")
     }
 }
 
-fun File.eachDir(block: (File) -> Unit) {
-    listFiles()?.filter { it.isDirectory }?.forEach { block(it) }
-}
-
-// To only include a single project, comment out the previous lines (except the first one), and include your plugin like so:
-// include("PluginName")
+// Defines all modules in your project
+rootProject.name = "CloudstreamProvider"
+include(":ExampleProvider")
