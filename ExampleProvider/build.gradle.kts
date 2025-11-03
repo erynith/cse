@@ -1,11 +1,9 @@
 // Provider Module build.gradle.kts - FINAL WORKING CONFIGURATION
 
-plugins {
-    // Apply the plugins configured in the root build.gradle.kts
-    id("com.android.library")
-    kotlin("android")
-    id("com.lagradost.cloudstream3.provider")
-}
+// Apply plugins using the legacy syntax to match the root buildscript block
+apply(plugin = "com.android.library")
+apply(plugin = "kotlin-android")
+apply(plugin = "com.lagradost.cloudstream3.provider")
 
 android {
     namespace = "com.example.provider"
@@ -31,8 +29,8 @@ android {
 }
 
 dependencies {
-    // The core CloudStream app library (Version 4.0.0 is latest stable)
-    implementation("com.lagradost.cloudstream3:app:4.0.0") 
+    // The core CloudStream app library (Version 4.0.0 is latest stable, found on JitPack via root buildscript)
+    implementation("com.lagradost.cloudstream3:app:4.0.0")
 
     // Standard Android libraries
     implementation("com.google.android.material:material:1.12.0")
