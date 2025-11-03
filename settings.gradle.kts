@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
-        // CRITICAL: Adding the repository for the plugin
+        // CRITICAL: Adding the repository and credentials for the plugin
         maven {
             name = "cloudstream"
             url = uri("https://api.github.com/repos/recloudstream/cloudstream-3/packages/maven")
