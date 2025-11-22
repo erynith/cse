@@ -181,6 +181,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
                             this.posterUrl = getImageUrl(eps.stillPath)
                             this.score = Score.from10(eps.voteAverage)
                             this.description = eps.overview
+                            this.runTime = eps.runTime
                             this.addDate(eps.airDate)
                         }
                     }
@@ -420,6 +421,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         @JsonProperty("overview") val overview: String? = null,
         @JsonProperty("air_date") val airDate: String? = null,
         @JsonProperty("still_path") val stillPath: String? = null,
+        @JsonProperty("runtime") val runTime: Int? = null,
         @JsonProperty("vote_average") val voteAverage: Double? = null,
         @JsonProperty("episode_number") val episodeNumber: Int? = null,
         @JsonProperty("season_number") val seasonNumber: Int? = null,
