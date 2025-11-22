@@ -2,6 +2,7 @@ package com.erynith
 
 import android.content.SharedPreferences
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
 import com.lagradost.cloudstream3.ErrorLoadingException
@@ -67,23 +68,37 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         }
     }
 
-    override val mainPage = mainPageOf(
-        "$tmdbAPI/trending/all/day?api_key=$apiKey&region=US" to "Trending",
-        "$tmdbAPI/movie/popular?api_key=$apiKey&region=US" to "Popular Movies",
-        "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows",
-        "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=213" to "Netflix",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=1024" to "Amazon",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2739" to "Disney+",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=453" to "Hulu",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2552" to "Apple TV+",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=49" to "HBO",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=4330" to "Paramount+",
-        "$tmdbAPI/movie/top_rated?api_key=$apiKey&region=US" to "Top Rated Movies",
-        "$tmdbAPI/tv/top_rated?api_key=$apiKey&region=US" to "Top Rated TV Shows",
-        "$tmdbAPI/movie/upcoming?api_key=$apiKey&region=US" to "Upcoming Movies",
-        "$tmdbAPI/discover/tv?api_key=$apiKey&with_original_language=ko" to "Korean Shows",
-    )
+    override val mainPage = run {
+        val currentMonth = LocalDate.now().monthValue
+        val specialPages = mutableListOf<Pair<String, String>>()
+
+        if (currentMonth == 11 || currentMonth == 12) {
+            specialPages += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=207317&region=US" to "Christmas Movies"
+        }
+        if (currentMonth == 10) {
+            specialPages += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=3335&with_genres=27&region=US" to "Halloween Movies"
+        }
+
+        val categoryPages = listOf(
+            "$tmdbAPI/trending/all/day?api_key=$apiKey&region=US" to "Trending",
+            "$tmdbAPI/movie/popular?api_key=$apiKey&region=US" to "Popular Movies",
+            "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows",
+            "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=213" to "Netflix",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=1024" to "Amazon",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2739" to "Disney+",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=453" to "Hulu",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2552" to "Apple TV+",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=49" to "HBO",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=4330" to "Paramount+",
+            "$tmdbAPI/movie/top_rated?api_key=$apiKey&region=US" to "Top Rated Movies",
+            "$tmdbAPI/tv/top_rated?api_key=$apiKey&region=US" to "Top Rated TV Shows",
+            "$tmdbAPI/movie/upcoming?api_key=$apiKey&region=US" to "Upcoming Movies",
+            "$tmdbAPI/discover/tv?api_key=$apiKey&with_original_language=ko" to "Korean Shows",
+        )
+
+        mainPageOf(*(specialPages + categoryPages).toTypedArray())
+    }
 
     private fun getImageUrl(link: String?): String? {
         if (link == null) return null
