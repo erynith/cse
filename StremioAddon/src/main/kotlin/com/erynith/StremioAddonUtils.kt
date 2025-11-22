@@ -13,12 +13,11 @@ fun String.fixSourceUrl(): String {
     return this.replace("/manifest.json", "").replace("stremio://", "https://")
 }
 
-fun fixSourceName(name: String?, title: String?): String {
+fun fixSourceName(name: String?, title: String?, description: String?): String {
     return when {
-        name?.contains("[RD+]", true) == true -> "[RD+] $title"
-        name?.contains("[RD download]", true) == true -> "[RD download] $title"
         !name.isNullOrEmpty() && !title.isNullOrEmpty() -> "$name $title"
-        else -> title ?: name ?: ""
+        !name.isNullOrEmpty() && !description.isNullOrEmpty() -> "$name $description"
+        else -> title ?: description ?: name ?: ""
     }
 }
 
