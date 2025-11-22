@@ -33,6 +33,9 @@ cloudstream {
     tvTypes = listOf(
         "TvSeries",
         "Movie",
+        "AsianDrama",
+        "Torrent",
+        "Others"
     )
     requiresResources = true
     iconUrl = "https://files.catbox.moe/ol63rm.png"

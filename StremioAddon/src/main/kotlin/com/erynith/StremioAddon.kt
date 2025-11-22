@@ -45,7 +45,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
     override var name = "Stremio Addon"
     override val hasMainPage = true
     override val hasQuickSearch = true
-    override val supportedTypes = setOf(TvType.Others)
+    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.AsianDrama, TvType.Torrent, TvType.Others)
 
     companion object {
         const val TRACKER_LIST_URL = "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt"
