@@ -15,8 +15,8 @@ fun String.fixSourceUrl(): String {
 
 fun fixSourceName(name: String?, title: String?, description: String?): String {
     return when {
-        !name.isNullOrEmpty() && !title.isNullOrEmpty() -> "$name $title"
-        !name.isNullOrEmpty() && !description.isNullOrEmpty() -> "$name $description"
+        !name.isNullOrEmpty() && !title.isNullOrEmpty() -> "$name\n$title"
+        !name.isNullOrEmpty() && !description.isNullOrEmpty() -> "$name\n$description"
         else -> title ?: description ?: name ?: ""
     }
 }
