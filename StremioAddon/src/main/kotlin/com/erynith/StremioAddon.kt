@@ -73,13 +73,13 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val currentMonth = LocalDate.now().monthValue
 
         categories += "$tmdbAPI/trending/all/day?api_key=$apiKey&region=US" to "Trending"
+        categories += "$tmdbAPI/movie/popular?api_key=$apiKey&region=US" to "Popular Movies"
         if (currentMonth == 11 || currentMonth == 12) {
             categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=207317&region=US" to "Christmas Movies"
         }
         if (currentMonth == 10) {
             categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=3335&with_genres=27&region=US" to "Halloween Movies"
         }
-        categories += "$tmdbAPI/movie/popular?api_key=$apiKey&region=US" to "Popular Movies"
         categories += "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows"
         categories += "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows"
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=213" to "Netflix"
