@@ -33,7 +33,6 @@ cloudstream {
     tvTypes = listOf(
         "TvSeries",
         "Movie",
-        "AsianDrama",
         "Torrent"
     )
     requiresResources = true

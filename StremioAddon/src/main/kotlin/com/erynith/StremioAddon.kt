@@ -46,7 +46,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
     override var name = "Stremio"
     override val hasMainPage = true
     override val hasQuickSearch = true
-    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.AsianDrama, TvType.Torrent)
+    override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Torrent)
 
     companion object {
         const val TRACKER_LIST_URL = "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt"
@@ -92,7 +92,6 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         categories += "$tmdbAPI/movie/top_rated?api_key=$apiKey&region=US" to "Top Rated Movies"
         categories += "$tmdbAPI/tv/top_rated?api_key=$apiKey&region=US" to "Top Rated TV Shows"
         categories += "$tmdbAPI/movie/upcoming?api_key=$apiKey&region=US" to "Upcoming Movies"
-        categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_original_language=ko" to "Korean Shows"
 
         mainPageOf(*(categories).toTypedArray())
     }
