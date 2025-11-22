@@ -1,0 +1,23 @@
+[
+    {
+        "iconUrl": "https://files.catbox.moe/ol63rm.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "fileSize": 74798,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "version": 9,
+        "internalName": "StremioAddon",
+        "description": "[!] Requires Setup \n- Allows you to use any Stremio addon by pasting their manifest.json url",
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/StremioAddon.cs3",
+        "name": "StremioAddon"
+    }
+]
