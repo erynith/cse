@@ -56,6 +56,7 @@ class SettingsFragment(
     ): View {
         val root = getLayout("settings", inflater, container)
 
+        // ===== ADDON =====
         val stremioAddonInput = root.findView<EditText>("stremio_addon_input")
         stremioAddonInput.setText(sharedPref.getString("stremio_addon", ""))
         stremioAddonInput.makeTvCompatible()

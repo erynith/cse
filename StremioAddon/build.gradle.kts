@@ -19,7 +19,7 @@ android {
 cloudstream {
     language = "en"
 
-     description = "Use extension settings to paste the stremio addon manifest url"
+     description = "[!] Requires Setup \n- Allows you to use any Stremio addon by pasting their manifest.json url"
      authors = listOf("Hexated,phisher98,erynith")
 
     /**
