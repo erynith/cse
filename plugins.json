@@ -1,0 +1,65 @@
+[
+    {
+        "iconUrl": "https://files.catbox.moe/dp7jah.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "fileSize": 80963,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "version": 1,
+        "internalName": "DebridStream",
+        "description": "[!] Requires Setup with a Debrid service",
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/DebridStream.cs3",
+        "name": "DebridStream"
+    },
+    {
+        "iconUrl": "https://files.catbox.moe/dp7jah.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "fileSize": 83191,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "version": 1,
+        "internalName": "DebridStreamEx",
+        "description": "[!] Requires Setup with a Debrid service",
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/DebridStreamEx.cs3",
+        "name": "DebridStreamEx"
+    },
+    {
+        "iconUrl": "https://files.catbox.moe/ol63rm.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "fileSize": 78330,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "version": 10,
+        "internalName": "StremioAddon",
+        "description": "[!] Requires Setup \n- Allows you to use any Stremio addon by pasting their manifest.json url",
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/StremioAddon.cs3",
+        "name": "StremioAddon"
+    }
+]
