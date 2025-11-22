@@ -34,12 +34,12 @@
                 android:padding="5dp" />
         </LinearLayout>
 
-        <!-- Stremio Manifest -->
+        <!-- Stremio Addon URL -->
         <EditText
             android:id="@+id/stremio_addon_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Manifest URL"
+            android:hint="Enter Addon Manifest URL"
             android:inputType="text"
             android:padding="8dp"
             android:layout_marginTop="5dp"
