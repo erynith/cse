@@ -1,0 +1,9 @@
+{
+    "name": "Erynith Repo",
+    "iconUrl": "https://files.catbox.moe/ol63rm.png",
+    "description": "Erynith Repository",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/erynith/cse/refs/heads/builds/plugins.json"
+    ]
+}
