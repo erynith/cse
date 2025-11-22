@@ -1,0 +1,90 @@
+[
+    {
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/DebridStream.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "DebridStream",
+        "internalName": "DebridStream",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "description": "[!] Requires Setup with a Debrid service",
+        "fileSize": 82420,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "language": "en",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "iconUrl": "https://files.catbox.moe/dp7jah.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-d667a6f0b7534ff0276ab3b66617ae6f37f0b76209bbeb2260fec935667def03"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/DebridStreamEx.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "DebridStreamEx",
+        "internalName": "DebridStreamEx",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "description": "[!] Requires Setup with a Debrid service",
+        "fileSize": 84621,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "language": "en",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "iconUrl": "https://files.catbox.moe/dp7jah.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-aa1e760481c16ba790d8c7d85e6575d63fa90c217cc2037736bdb7e2b9ed7def"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/Favoritism.cs3",
+        "status": 1,
+        "version": 1,
+        "name": "Favoritism",
+        "internalName": "Favoritism",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "description": "[!] Requires Setup with a Debrid service. Plays your favorite torrent for a title when an addon has it, otherwise shows everything.",
+        "fileSize": 96426,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "language": "en",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "iconUrl": "https://em-content.zobj.net/source/twitter/53/white-medium-star_2b50.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-e3c0629cb162257b2491aacf473d90affeedcbd8b598beec0db567806b985f34"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/erynith/cse/builds/StremioAddon.cs3",
+        "status": 1,
+        "version": 10,
+        "name": "StremioAddon",
+        "internalName": "StremioAddon",
+        "authors": [
+            "Hexated,phisher98,erynith"
+        ],
+        "description": "[!] Requires Setup \n- Allows you to use any Stremio addon by pasting their manifest.json url",
+        "fileSize": 79579,
+        "repositoryUrl": "https://github.com/erynith/cse",
+        "language": "en",
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Torrent"
+        ],
+        "iconUrl": "https://files.catbox.moe/ol63rm.png",
+        "apiVersion": 1,
+        "fileHash": "sha256-6e1065dd561d36d7e08f514458e9e24775211190aa2c72468efa7da76d28375c"
+    }
+]
