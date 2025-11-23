@@ -262,21 +262,15 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val res = parseJson<LoadData>(data)
 
         runAllAsync(
-            {
-                invokeMainSource("stremio_addon", res.imdbId, res.season, res.episode, subtitleCallback, callback)
-            },
-            {
-                invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback)
-            },
-            {
-                invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback)
-            },
+            suspend { invokeAddonSource("stremio_addon", res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
+            suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
         )
 
         return true
     }
 
-    private suspend fun invokeMainSource(
+    private suspend fun invokeAddonSource(
         addonPreference: String? = null,
         imdbId: String? = null,
         season: Int? = null,
