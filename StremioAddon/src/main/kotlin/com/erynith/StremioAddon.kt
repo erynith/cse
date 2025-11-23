@@ -55,7 +55,6 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         private const val tmdbAPI = "https://api.themoviedb.org/3"
         private const val apiKey = BuildConfig.TMDB_API
         private const val simkl = "https://api.simkl.com"
-        private const val simklApi = BuildConfig.SIMKL_API
 
         fun getType(t: String?): TvType {
             return when (t) {
@@ -183,7 +182,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val simklid = runCatching {
             res.external_ids?.imdb_id?.takeIf { it.isNotBlank() }?.let { imdb ->
                 val path = if (type == TvType.Movie) "movies" else "tv"
-                val resJson = JSONObject(app.get("$simkl/$path/$imdb?client_id=$simklApi").text)
+                val resJson = JSONObject(app.get("$simkl/$path/$imdb?client_id=${com.lagradost.cloudstream3.BuildConfig.SIMKL_CLIENT_ID}").text)
                 resJson.optJSONObject("ids")?.optInt("simkl")?.takeIf { it != 0 }
             }
         }.getOrNull()
