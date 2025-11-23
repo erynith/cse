@@ -13,6 +13,7 @@ on:
       - main
     paths-ignore:
       - '*.md'
+      - '.github/**'
 
 jobs:
   build:
@@ -43,6 +44,7 @@ jobs:
       - name: Access Secrets
         env:
           TMDB_API: ${{ secrets.TMDB_API }}
+          SIMKL_API: ${{ secrets.SIMKL_API }}
         run: |
           cd $GITHUB_WORKSPACE/src
           echo TMDB_API=$TMDB_API >> local.properties
