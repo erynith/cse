@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.konan.properties.Properties
 
-// use an integer for version numbers
-version = 1
+version = 2
 
 android {
     buildFeatures {
@@ -13,6 +12,7 @@ android {
         properties.load(project.rootProject.file("local.properties").inputStream())
         android.buildFeatures.buildConfig=true
         buildConfigField("String", "TMDB_API", "\"${properties.getProperty("TMDB_API")}\"")
+        buildConfigField("String", "SIMKL_API", "\"${properties.getProperty("SIMKL_API")}\"")
     }
 }
 
