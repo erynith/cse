@@ -1,6 +1,7 @@
 package com.erynith
 
 import android.content.SharedPreferences
+import android.webkit.URLUtil
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.json.JSONObject
 import java.time.LocalDate
@@ -44,7 +45,7 @@ import com.erynith.SubsExtractors.invokeOpenSubs
 import com.erynith.SubsExtractors.invokeWatchsomuch
 
 class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
-    override var mainUrl = "https://torrentio.strem.fun"
+    override var mainUrl = "https://example.com"
     override var name = "Stremio"
     override val hasMainPage = true
     override val hasQuickSearch = true
@@ -262,7 +263,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
 
         runAllAsync(
             {
-                invokeMainSource(res.imdbId, res.season, res.episode, subtitleCallback, callback)
+                invokeMainSource("stremio_addon", res.imdbId, res.season, res.episode, subtitleCallback, callback)
             },
             {
                 invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback)
@@ -276,18 +277,20 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
     }
 
     private suspend fun invokeMainSource(
+        addonPreference: String? = null,
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
-        val fixMainUrl = sharedPref.getString("stremio_addon", mainUrl)?.fixSourceUrl()
+        val fixMainUrl = sharedPref.getString(addonPreference, "")?.fixSourceUrl()
         val url = if (season == null) {
             "$fixMainUrl/stream/movie/$imdbId.json"
         } else {
             "$fixMainUrl/stream/series/$imdbId:$season:$episode.json"
         }
+        if (!URLUtil.isValidUrl(url)) return
         val res = app.get(url, timeout = 120L).parsedSafe<StreamsResponse>()
         res?.streams?.forEach { stream ->
             stream.runCallback(subtitleCallback, callback)
