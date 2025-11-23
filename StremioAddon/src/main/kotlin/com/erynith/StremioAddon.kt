@@ -96,13 +96,13 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         mainPageOf(*(categories).toTypedArray())
     }
 
-    private fun getImageUrl(link: String?): String? {
-        if (link == null) return null
+    private fun getImageUrl(link: String?, fallback: String?): String? {
+        if (link == null) return fallback
         return if (link.startsWith("/")) "https://image.tmdb.org/t/p/w500/$link" else link
     }
 
-    private fun getOriImageUrl(link: String?): String? {
-        if (link == null) return null
+    private fun getOriImageUrl(link: String?, fallback: String?): String? {
+        if (link == null) return fallback
         return if (link.startsWith("/")) "https://image.tmdb.org/t/p/original/$link" else link
     }
 
@@ -125,7 +125,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
             Data(id = id, type = mediaType ?: type).toJson(),
             TvType.Movie,
         ) {
-            this.posterUrl = getImageUrl(posterPath)
+            this.posterUrl = getImageUrl(posterPath, "https://files.catbox.moe/90n81c.jpg")
         }
     }
 
@@ -152,8 +152,8 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
             ?: throw ErrorLoadingException("Invalid Json Response")
 
         val title = res.title ?: res.name ?: return null
-        val poster = getOriImageUrl(res.posterPath)
-        val bgPoster = getOriImageUrl(res.backdropPath)
+        val poster = getOriImageUrl(res.posterPath, "https://files.catbox.moe/32gthr.jpg")
+        val bgPoster = getOriImageUrl(res.backdropPath, "https://files.catbox.moe/9qao8w.jpg")
         val releaseDate = res.releaseDate ?: res.firstAirDate
         val year = releaseDate?.split("-")?.first()?.toIntOrNull()
         val genres = res.genres?.mapNotNull { it.name }
@@ -166,7 +166,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
             ActorData(
                 Actor(
                     cast.name ?: cast.originalName ?: return@mapNotNull null,
-                    getImageUrl(cast.profilePath)
+                    getImageUrl(cast.profilePath, "https://files.catbox.moe/90n81c.jpg")
                 ), roleString = cast.character
             )
         } ?: return null
@@ -189,7 +189,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
                             this.name = eps.name + if (isUpcoming(eps.airDate)) " • [UPCOMING]" else ""
                             this.season = eps.seasonNumber
                             this.episode = eps.episodeNumber
-                            this.posterUrl = getImageUrl(eps.stillPath)
+                            this.posterUrl = getImageUrl(eps.stillPath, "https://files.catbox.moe/qbz6xd.jpg")
                             this.score = Score.from10(eps.voteAverage)
                             this.description = eps.overview
                             this.runTime = eps.runtime
