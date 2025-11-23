@@ -2,6 +2,7 @@ package com.erynith
 
 import android.content.SharedPreferences
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.json.JSONObject
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
