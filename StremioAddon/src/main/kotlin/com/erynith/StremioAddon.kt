@@ -82,7 +82,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
             categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=207317&region=US" to "Christmas Movies"
         }
         if (currentMonth == 10) {
-            categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=3335&with_genres=27&region=US" to "Halloween Movies"
+            categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_genres=27&region=US" to "Halloween Horror Movies"
         }
         categories += "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows"
         categories += "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows"
@@ -262,7 +262,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val res = parseJson<LoadData>(data)
 
         runAllAsync(
-            suspend { invokeAddonSource("stremio_addon", res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeMainSource(res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
         )
@@ -270,24 +270,29 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         return true
     }
 
-    private suspend fun invokeAddonSource(
-        addonPreference: String? = null,
+    private suspend fun invokeMainSource(
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
-        val fixMainUrl = sharedPref.getString(addonPreference, "")?.fixSourceUrl()
-        val url = if (season == null) {
-            "$fixMainUrl/stream/movie/$imdbId.json"
-        } else {
-            "$fixMainUrl/stream/series/$imdbId:$season:$episode.json"
-        }
-        if (!URLUtil.isValidUrl(url)) return
-        val res = app.get(url, timeout = 120L).parsedSafe<StreamsResponse>()
-        res?.streams?.forEach { stream ->
-            stream.runCallback(subtitleCallback, callback)
+        val addonList = listOf("stremio_addon", "stremio_addon2", "stremio_addon3", "stremio_addon4", "stremio_addon5")
+
+        for (addonPref in addonList) {
+            val fixMainUrl = sharedPref.getString(addonPref, "")?.fixSourceUrl()
+            val url = if (season == null) {
+                "$fixMainUrl/stream/movie/$imdbId.json"
+            } else {
+                "$fixMainUrl/stream/series/$imdbId:$season:$episode.json"
+            }
+
+            if (!URLUtil.isValidUrl(url)) continue
+
+            val res = app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+            res?.streams?.forEach { stream ->
+                stream.runCallback(subtitleCallback, callback)
+            }
         }
     }
 
