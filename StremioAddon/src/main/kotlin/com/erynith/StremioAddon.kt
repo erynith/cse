@@ -78,14 +78,14 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
 
         categories += "$tmdbAPI/trending/all/day?api_key=$apiKey&region=US" to "Trending"
         categories += "$tmdbAPI/movie/popular?api_key=$apiKey&region=US" to "Popular Movies"
-        if (currentMonth == 11 || currentMonth == 12) {
-            categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=207317&region=US" to "Christmas Movies"
-        }
+        categories += "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows"
+        categories += "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows"
         if (currentMonth == 10) {
             categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_genres=27&region=US" to "Halloween Horror Movies"
         }
-        categories += "$tmdbAPI/tv/popular?api_key=$apiKey&region=US&with_original_language=en" to "Popular TV Shows"
-        categories += "$tmdbAPI/tv/airing_today?api_key=$apiKey&region=US&with_original_language=en" to "Airing Today TV Shows"
+        if (currentMonth == 11 || currentMonth == 12) {
+            categories += "$tmdbAPI/discover/movie?api_key=$apiKey&with_keywords=207317&region=US" to "Christmas Movies"
+        }
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=213" to "Netflix"
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=1024" to "Amazon Prime"
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2739" to "Disney+"
@@ -93,6 +93,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=2552" to "Apple TV+"
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=49" to "HBO Max"
         categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=4330" to "Paramount+"
+        categories += "$tmdbAPI/discover/tv?api_key=$apiKey&with_networks=4551" to "Dropout"
         categories += "$tmdbAPI/movie/top_rated?api_key=$apiKey&region=US" to "Top Rated Movies"
         categories += "$tmdbAPI/tv/top_rated?api_key=$apiKey&region=US" to "Top Rated TV Shows"
         categories += "$tmdbAPI/movie/upcoming?api_key=$apiKey&region=US" to "Upcoming Movies"
