@@ -354,7 +354,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        "--------------------------------------------------------" + fixSourceName(name, title, description),
+                        "--------------------------------------------------------\n" + fixSourceName(name, title, description),
                         url,
                         INFER_TYPE,
                     )
