@@ -14,10 +14,13 @@ fun String.fixSourceUrl(): String {
 }
 
 fun fixSourceName(name: String?, title: String?, description: String?): String {
+    val pName = name?.replace("\\n", " ")
+    val pTitle = title?.replace("\\n", " ")
+
     return when {
-        !name.isNullOrEmpty() && !title.isNullOrEmpty() -> "$name\n$title"
-        !name.isNullOrEmpty() && !description.isNullOrEmpty() -> "$name\n$description"
-        else -> title ?: description ?: name ?: ""
+        !pName.isNullOrEmpty() && !pTitle.isNullOrEmpty() -> "$pName\n$pTitle"
+        !pName.isNullOrEmpty() && !description.isNullOrEmpty() -> "$pName\n$description"
+        else -> pTitle ?: description ?: pName ?: ""
     }
 }
 
