@@ -26,8 +26,10 @@ fun fixSourceName(name: String?, title: String?, description: String?): String {
 
 fun getQuality(qualities: List<String?>): Int {
     fun String.getQuality(): String? {
+        val has = Regex("(\\d{3,4}[pP])").find(this)?.groupValues?.getOrNull(1)
+        if (has != null) return has
         if (contains("4k", ignoreCase = true)) return "2160p"
-        return Regex("(\\d{3,4}[pP])").find(this)?.groupValues?.getOrNull(1)
+        return null
     }
     val quality = qualities.firstNotNullOfOrNull { it?.getQuality() }
     return getQualityFromName(quality)
