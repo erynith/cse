@@ -44,6 +44,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.SubtitleHelper
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import com.erynith.SubsExtractors.invokeOpenSubsPro
 import com.erynith.SubsExtractors.invokeOpenSubs
 import com.erynith.SubsExtractors.invokeWatchsomuch
 
