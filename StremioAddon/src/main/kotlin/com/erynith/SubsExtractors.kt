@@ -6,10 +6,36 @@ import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.newSubtitleFile
 import com.lagradost.cloudstream3.utils.SubtitleHelper
 
+const val openSubProAPI = "https://opensubtitles.stremio.homes/en/ai-translated=false%7Cfrom=trusted%7Cauto-adjustment=false"
 const val openSubAPI = "https://opensubtitles-v3.strem.io"
 const val watchSomuchAPI = "https://watchsomuch.tv"
 
 object SubsExtractors {
+    suspend fun invokeOpenSubsPro(
+        imdbId: String? = null,
+        season: Int? = null,
+        episode: Int? = null,
+        subtitleCallback: (SubtitleFile) -> Unit,
+    ) {
+        if (imdbId.isNullOrBlank()) {
+            return
+        }
+        val slug = if(season == null) {
+            "movie/$imdbId"
+        } else {
+            "series/$imdbId:$season:$episode"
+        }
+        app.get("${openSubProAPI}/subtitles/$slug.json", timeout = 120L).parsedSafe<OsResult>()?.subtitles?.map { sub ->
+            subtitleCallback.invoke(
+                newSubtitleFile(
+                    SubtitleHelper.fromTagToEnglishLanguageName(sub.lang ?: "") ?: sub.lang
+                    ?: return@map,
+                    sub.url ?: return@map
+                )
+            )
+        }
+    }
+
     suspend fun invokeOpenSubs(
         imdbId: String? = null,
         season: Int? = null,
