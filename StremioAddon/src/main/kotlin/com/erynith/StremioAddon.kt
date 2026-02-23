@@ -279,7 +279,7 @@ class StremioAddon(private val sharedPref: SharedPreferences) : TmdbProvider() {
 
         runAllAsync(
             suspend { invokeMainSource(res.imdbId, res.season, res.episode, subtitleCallback, callback) },
-            suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
+            //suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
         )
