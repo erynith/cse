@@ -59,7 +59,7 @@ class SettingsFragment(
         // ===== DEBRID SERVICES =====
         val debridSpinner = root.findView<Spinner>("debrid_service_spinner")
         val debridServices = listOf(
-            "Real-Debrid", "TorBox", "All-Debrid", "Debrid-Link"
+            "Real-Debrid", "TorBox", "All-Debrid", "Debrid-Link",
             "Premiumize", "Debrider", "EasyDebrid", "Offcloud", "PikPak"
         )
         debridSpinner.adapter =

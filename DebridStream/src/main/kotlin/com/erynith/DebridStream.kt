@@ -295,7 +295,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         return true
     }
 
-    const val DEBRID_IDs = mapOf(
+    val DEBRID_IDs = mapOf(
         "Real-Debrid" to listOf("realdebrid", "rd"),
         "TorBox" to listOf("torbox", "tb"),
         "All-Debrid" to listOf("alldebrid", "ad"),
@@ -307,12 +307,13 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         "PikPak" to listOf("pikpak", "pkp", "pp")
     )
 
-    suspend fun invokeTorrentio(
+    private suspend fun invokeTorrentio(
         debridService: String? = null,
         debridKey: String? = null,
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
+        subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
         if (debridService !in arrayOf(
