@@ -358,22 +358,22 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val debridId = DEBRID_IDs[debridService]?.get(0)
 
         val cometConfig = mutableMapOf<String, Any>(
-            "maxResultsPerResolution" to 0,
-            "maxSize" to 0,
-            "cachedOnly" to true,
-            "sortCachedUncachedTogether" to false,
-            "removeTrash" to true,
-            "resultFormat" to mutableListOf("all"),
-            "debridServices" to mutableListOf(
+            "max_results_per_resolution" to 0,
+            "max_size" to 0,
+            "cached_only" to true,
+            "sort_cached_uncached_together" to false,
+            "remove_trash" to true,
+            "result_format" to mutableListOf("all"),
+            "debrid_services" to mutableListOf(
                 mutableMapOf(
                     "service" to debridService,
-                    "apiKey" to debridKey
+                    "api_key" to debridKey
                 )
             ),
-            "enableTorrent" to true,
-            "deduplicateStreams" to false,
-            "scrapeDebridAccountTorrents" to false,
-            "debridStreamProxyPassword" to "",
+            "enable_torrent" to true,
+            "deduplicate_streams" to false,
+            "scrape_debrid_account_torrents" to false,
+            "debrid_stream_proxy_password" to "",
             "languages" to mutableMapOf(
                 "required" to mutableListOf<String>(),
                 "allowed" to mutableListOf<String>(),
