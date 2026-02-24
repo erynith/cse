@@ -304,7 +304,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         "Debrider" to listOf("debrider", "dr"),
         "EasyDebrid" to listOf("easydebrid", "ed"),
         "Offcloud" to listOf("offcloud", "oc"),
-        "PikPak" to listOf("pikpak", "pkp", "pp")
+        "PikPak" to listOf("pikpak", "pp", "pkp")
     )
 
     private suspend fun invokeTorrentio(
@@ -334,7 +334,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback(subtitleCallback, callback)
+                stream.runCallback("Torrentio", subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Torrentio")
@@ -367,6 +367,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val subtitles: List<Subtitle> = emptyList()
     ) {
         suspend fun runCallback(
+            sourceName: String?,
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
@@ -374,7 +375,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        fixSourceName(name, title, description),
+                        "⌞ $sourceName ⌝",
                         url,
                         INFER_TYPE,
                     )
