@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.api.Log
 import org.json.JSONObject
+import android.util.Base64
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -27,8 +28,6 @@ import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.addDate
 import com.lagradost.cloudstream3.app
 import com.lagradost.cloudstream3.mainPageOf
-import com.lagradost.cloudstream3.base64Encode
-import com.lagradost.cloudstream3.base64Decode
 import com.lagradost.cloudstream3.metaproviders.TmdbProvider
 import com.lagradost.cloudstream3.newEpisode
 import com.lagradost.cloudstream3.newHomePageResponse
@@ -46,6 +45,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 import com.lagradost.cloudstream3.utils.SubtitleHelper
 import com.lagradost.cloudstream3.utils.loadExtractor
 import com.lagradost.cloudstream3.utils.newExtractorLink
+import java.nio.charset.StandardCharsets
 import com.erynith.SubsExtractors.invokeOpenSubsPro
 import com.erynith.SubsExtractors.invokeOpenSubs
 import com.erynith.SubsExtractors.invokeWatchsomuch
@@ -287,6 +287,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
 
         runAllAsync(
             suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
@@ -334,10 +335,77 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback("Torrentio", subtitleCallback, callback)
+                stream.runCallback(subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Torrentio")
+        }
+    }
+
+    private suspend fun invokeComet(
+        debridService: String? = null,
+        debridKey: String? = null,
+        imdbId: String? = null,
+        season: Int? = null,
+        episode: Int? = null,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit
+    ) {
+        if (debridService !in arrayOf(
+            "Real-Debrid", "TorBox", "All-Debrid", "Debrid-Link",
+            "Premiumize", "Debrider", "EasyDebrid", "Offcloud", "PikPak"
+        )) { return }
+        val debridId = DEBRID_IDs[debridService]?.get(0)
+
+        val cometConfig = mutableMapOf<String, Any>(
+            "maxResultsPerResolution" to 0,
+            "maxSize" to 0,
+            "cachedOnly" to true,
+            "sortCachedUncachedTogether" to false,
+            "removeTrash" to true,
+            "resultFormat" to mutableListOf("all"),
+            "debridServices" to mutableListOf(
+                mutableMapOf(
+                    "service" to debridService,
+                    "apiKey" to debridKey
+                )
+            ),
+            "enableTorrent" to true,
+            "deduplicateStreams" to false,
+            "scrapeDebridAccountTorrents" to false,
+            "debridStreamProxyPassword" to "",
+            "languages" to mutableMapOf(
+                "required" to mutableListOf<String>(),
+                "allowed" to mutableListOf<String>(),
+                "exclude" to mutableListOf<String>(),
+                "preferred" to mutableListOf<String>()
+            ),
+            "resolutions" to mutableMapOf<String, Any>(),
+            "options" to mutableMapOf(
+                "remove_ranks_under" to -10000000000L,
+                "allow_english_in_languages" to false,
+                "remove_unknown_languages" to false
+            )
+        )
+
+        val manifest = JSONObject(cometConfig as Map<*, *>).toString()
+        val encoded = Base64.encodeToString(manifest.toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)
+        val mainUrl = "https://comet.feels.legal/$encoded"
+
+        val url = if (season == null) {
+            "$mainUrl/stream/movie/$imdbId.json"
+        } else {
+            "$mainUrl/stream/series/$imdbId:$season:$episode.json"
+        }
+
+        runCatching {
+            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+        }.onSuccess { res ->
+            res?.streams?.forEach { stream ->
+                stream.runCallback(subtitleCallback, callback)
+            }
+        }.onFailure { e ->
+            Log.e(name, "Error loading from Comet")
         }
     }
 
@@ -367,7 +435,6 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val subtitles: List<Subtitle> = emptyList()
     ) {
         suspend fun runCallback(
-            sourceName: String?,
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
@@ -375,7 +442,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        "⌞ $sourceName ⌝",
+                        fixSourceName(name, title, description),
                         url,
                         INFER_TYPE,
                     )
