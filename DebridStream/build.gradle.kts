@@ -35,7 +35,7 @@ cloudstream {
         "Torrent"
     )
     requiresResources = true
-    iconUrl = "https://files.catbox.moe/wgb3wa.png"
+    iconUrl = "https://files.catbox.moe/dp7jah.png"
 }
 
 dependencies {

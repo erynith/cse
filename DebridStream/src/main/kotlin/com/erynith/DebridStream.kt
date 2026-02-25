@@ -289,6 +289,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         runAllAsync(
             suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeStremthru(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
@@ -358,7 +359,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         )) { return }
         val debridId = DEBRID_IDs[debridService]?.get(0)
 
-        val cometConfig = """
+        val manifest = """
             {
                 "maxResultsPerResolution": 0,
                 "maxSize": 0,
@@ -367,7 +368,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 "removeTrash": true,
                 "resultFormat": ["all"],
                 "debridServices": [{"service": "$debridId", "apiKey": "$debridKey"}],
-                "enableTorrent": true,
+                "enableTorrent": false,
                 "deduplicateStreams": false,
                 "scrapeDebridAccountTorrents": false,
                 "debridStreamProxyPassword": "",
@@ -377,7 +378,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             }
             """.trimIndent()
 
-        val encoded = base64Encode(cometConfig.toByteArray())
+        val encoded = base64Encode(manifest.toByteArray())
         val mainUrl = "https://comet.feels.legal/$encoded"
 
         val url = if (season == null) {
@@ -394,6 +395,49 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Comet")
+        }
+    }
+
+    private suspend fun invokeStremthru(
+        debridService: String? = null,
+        debridKey: String? = null,
+        imdbId: String? = null,
+        season: Int? = null,
+        episode: Int? = null,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit
+    ) {
+        if (debridService !in arrayOf(
+            "Real-Debrid", "TorBox", "All-Debrid", "Debrid-Link",
+            "Premiumize", "Debrider", "EasyDebrid", "Offcloud", "PikPak"
+        )) { return }
+        val debridId = DEBRID_IDs[debridService]?.get(1)
+
+        val manifest = """
+            {
+                "indexers": null,
+                "stores": [{"c": "$debridId", "t": "$debridKey"}],
+                "cached": true
+            }
+            """.trimIndent()
+
+        val encoded = base64Encode(manifest.toByteArray())
+        val mainUrl = "https://stremthru.13377001.xyz/stremio/torz/$encoded"
+
+        val url = if (season == null) {
+            "$mainUrl/stream/movie/$imdbId.json"
+        } else {
+            "$mainUrl/stream/series/$imdbId:$season:$episode.json"
+        }
+
+        runCatching {
+            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+        }.onSuccess { res ->
+            res?.streams?.forEach { stream ->
+                stream.runCallback(subtitleCallback, callback)
+            }
+        }.onFailure { e ->
+            Log.e(name, "Error loading from StremThru")
         }
     }
 
