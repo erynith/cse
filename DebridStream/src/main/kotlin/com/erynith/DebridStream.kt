@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.api.Log
 import org.json.JSONObject
 import android.util.Base64
+import com.lagradost.cloudstream3.base64Encode
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -357,39 +358,26 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         )) { return }
         val debridId = DEBRID_IDs[debridService]?.get(0)
 
-        val cometConfig = mutableMapOf<String, Any>(
-            "max_results_per_resolution" to 0,
-            "max_size" to 0,
-            "cached_only" to true,
-            "sort_cached_uncached_together" to false,
-            "remove_trash" to true,
-            "result_format" to mutableListOf("all"),
-            "debrid_services" to mutableListOf(
-                mutableMapOf(
-                    "service" to debridService,
-                    "api_key" to debridKey
-                )
-            ),
-            "enable_torrent" to true,
-            "deduplicate_streams" to false,
-            "scrape_debrid_account_torrents" to false,
-            "debrid_stream_proxy_password" to "",
-            "languages" to mutableMapOf(
-                "required" to mutableListOf<String>(),
-                "allowed" to mutableListOf<String>(),
-                "exclude" to mutableListOf<String>(),
-                "preferred" to mutableListOf<String>()
-            ),
-            "resolutions" to mutableMapOf<String, Any>(),
-            "options" to mutableMapOf(
-                "remove_ranks_under" to -10000000000L,
-                "allow_english_in_languages" to false,
-                "remove_unknown_languages" to false
-            )
-        )
+        val cometConfig = """
+            {
+                "maxResultsPerResolution": 0,
+                "maxSize": 0,
+                "cachedOnly": true,
+                "sortCachedUncachedTogether": false,
+                "removeTrash": true,
+                "resultFormat": ["all"],
+                "debridServices": [{"service": "$debridId", "apiKey": "$debridKey"}],
+                "enableTorrent": true,
+                "deduplicateStreams": false,
+                "scrapeDebridAccountTorrents": false,
+                "debridStreamProxyPassword": "",
+                "languages": {"required": [], "allowed": [], "exclude": [], "preferred": []},
+                "resolutions": {},
+                "options": {"remove_ranks_under": -10000000000, "allow_english_in_languages": false, "remove_unknown_languages": false}
+            }
+            """.trimIndent()
 
-        val manifest = JSONObject(cometConfig as Map<*, *>).toString()
-        val encoded = Base64.encodeToString(manifest.toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)
+        val encoded = base64Encode(cometConfig.toByteArray())
         val mainUrl = "https://comet.feels.legal/$encoded"
 
         val url = if (season == null) {
