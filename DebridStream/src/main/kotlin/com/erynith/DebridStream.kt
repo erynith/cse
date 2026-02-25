@@ -290,6 +290,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeStremthru(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeMeteor(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
@@ -438,6 +439,62 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from StremThru")
+        }
+    }
+
+    private suspend fun invokeMeteor(
+        debridService: String? = null,
+        debridKey: String? = null,
+        imdbId: String? = null,
+        season: Int? = null,
+        episode: Int? = null,
+        subtitleCallback: (SubtitleFile) -> Unit,
+        callback: (ExtractorLink) -> Unit
+    ) {
+        if (debridService !in arrayOf(
+            "Real-Debrid", "TorBox", "All-Debrid", "Debrid-Link",
+            "Premiumize", "Debrider", "EasyDebrid", "Offcloud", "PikPak"
+        )) { return }
+        val debridId = DEBRID_IDs[debridService]?.get(0)
+
+        val manifest = """
+            {
+                "debridService": "$debridId",
+                "debridApiKey": "$debridKey",
+                "cachedOnly": true,
+                "removeTrash": true,
+                "removeSamples": true,
+                "removeAdult": true,
+                "exclude3D": true,
+                "enableSeaDex": true,
+                "minSeeders": 0,
+                "maxResults": 0,
+                "maxResultsPerRes": 0,
+                "maxSize": 0,
+                "resolutions": [],
+                "languages": {"preferred": ["en", "multi"], "required": [], "exclude": []},
+                "resultFormat": ["title", "quality", "size", "audio"],
+                "sortOrder": ["pack", "cached", "seadex", "resolution", "size", "quality", "seeders", "language"]
+            }
+            """.trimIndent()
+
+        val encoded = base64Encode(manifest.toByteArray())
+        val mainUrl = "https://meteorfortheweebs.midnightignite.me/$encoded"
+
+        val url = if (season == null) {
+            "$mainUrl/stream/movie/$imdbId.json"
+        } else {
+            "$mainUrl/stream/series/$imdbId:$season:$episode.json"
+        }
+
+        runCatching {
+            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+        }.onSuccess { res ->
+            res?.streams?.forEach { stream ->
+                stream.runCallback("Meteor", subtitleCallback, callback)
+            }
+        }.onFailure { e ->
+            Log.e(name, "Error loading from Meteor")
         }
     }
 
