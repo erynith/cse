@@ -337,7 +337,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback(subtitleCallback, callback)
+                stream.runCallback("Torrentio", subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Torrentio")
@@ -391,7 +391,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback(subtitleCallback, callback)
+                stream.runCallback("Comet", subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Comet")
@@ -434,7 +434,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback(subtitleCallback, callback)
+                stream.runCallback("StremThru", subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from StremThru")
@@ -467,6 +467,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val subtitles: List<Subtitle> = emptyList()
     ) {
         suspend fun runCallback(
+            sourceName: String?,
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
@@ -474,7 +475,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        fixSourceName(name, title, description),
+                        "⌞ $sourceName ⌝",
                         url,
                         INFER_TYPE,
                     )
