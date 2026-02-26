@@ -566,7 +566,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        "⌞ $sourceName ⌝",
+                        "⌞ $sourceName - $hash ⌝",
                         url,
                         INFER_TYPE,
                     )
