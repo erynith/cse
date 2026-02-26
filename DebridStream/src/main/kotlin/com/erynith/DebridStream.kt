@@ -291,7 +291,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
             suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
             suspend { invokeStremthru(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
-            suspend { invokeMeteor(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
+            //suspend { invokeMeteor(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
