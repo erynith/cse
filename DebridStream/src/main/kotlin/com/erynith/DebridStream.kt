@@ -547,7 +547,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val behaviorHints: BehaviorHints?,
         var infohash: String? = null,
         val sources: List<String> = emptyList(),
-        val subtitles: List<Subtitle> = emptyList(),
+        val subtitles: List<Subtitle> = emptyList()
     ) {
         suspend fun runCallback(
             sourceName: String?,
@@ -555,8 +555,9 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
-            if (!infohash.isNullOrBlank()) {
-                if (!shared.add(infohash)) {
+            val hash = infohash
+            if (!hash.isNullOrBlank()) {
+                if (!shared.add(hash)) {
                     return
                 }
             }
