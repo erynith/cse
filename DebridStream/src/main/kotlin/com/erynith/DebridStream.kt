@@ -286,11 +286,12 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             return false
         }
 
+        val shared = mutableSetOf<String>()
         runAllAsync(
-            suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
-            suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
-            suspend { invokeStremthru(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
-            suspend { invokeMeteor(service, key, res.imdbId, res.season, res.episode, subtitleCallback, callback) },
+            suspend { invokeTorrentio(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
+            suspend { invokeComet(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
+            suspend { invokeStremthru(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
+            suspend { invokeMeteor(service, key, res.imdbId, res.season, res.episode, shared, subtitleCallback, callback) },
             suspend { invokeWatchsomuch(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubsPro(res.imdbId, res.season, res.episode, subtitleCallback) },
             suspend { invokeOpenSubs(res.imdbId, res.season, res.episode, subtitleCallback) }
@@ -317,6 +318,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
+        shared: MutableSet<String>,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
@@ -338,7 +340,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback("Torrentio", subtitleCallback, callback)
+                stream.runCallback("Torrentio", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Torrentio")
@@ -351,6 +353,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
+        shared: MutableSet<String>,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
@@ -392,7 +395,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback("Comet", subtitleCallback, callback)
+                stream.runCallback("Comet", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Comet")
@@ -405,6 +408,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
+        shared: MutableSet<String>,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
@@ -435,7 +439,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback("StremThru", subtitleCallback, callback)
+                stream.runCallback("StremThru", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from StremThru")
@@ -448,6 +452,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         imdbId: String? = null,
         season: Int? = null,
         episode: Int? = null,
+        shared: MutableSet<String>,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ) {
@@ -491,7 +496,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                stream.runCallback("Meteor", subtitleCallback, callback)
+                stream.runCallback("Meteor", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
             Log.e(name, "Error loading from Meteor")
@@ -510,6 +515,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
     )
 
     private data class BehaviorHints(
+        val filename: String? = null,
         val proxyHeaders: ProxyHeaders?,
         val headers: Map<String, String>?,
     )
@@ -525,9 +531,17 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
     ) {
         suspend fun runCallback(
             sourceName: String?,
+            shared: MutableSet<String>,
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
+            val filename = behaviorHints?.filename
+            if (!filename.isNullOrBlank()) {
+                if (!shared.add(filename)) {
+                    return
+                }
+            }
+
             if (url != null) {
                 callback.invoke(
                     newExtractorLink(
