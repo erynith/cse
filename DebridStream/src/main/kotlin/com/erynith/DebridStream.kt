@@ -340,8 +340,9 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                if (stream?.url.contains("/resolve/")) {
-                    stream.infohash = stream?.url.split("/").getOrNull(6)
+                val url = stream?.url
+                if (url?.contains("/resolve/")) {
+                    stream.infohash = url.split("/").getOrNull(6)
                 }
 
                 stream.runCallback("Torrentio", shared, subtitleCallback, callback)
@@ -512,8 +513,9 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
-                if (stream?.url.contains("/play/")) {
-                    stream.infohash = stream?.url.split("/").getOrNull(5)
+                val url = stream?.url
+                if (url?.contains("/play/")) {
+                    stream.infohash = url.split("/").getOrNull(5)
                 }
 
                 stream.runCallback("Meteor", shared, subtitleCallback, callback)
