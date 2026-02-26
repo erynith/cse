@@ -18,7 +18,7 @@ android {
 cloudstream {
     language = "en"
 
-    description = "[!] Requires Setup"
+    description = "[!] Requires Setup with a Debrid service"
     authors = listOf("Hexated,phisher98,erynith")
 
     /**
