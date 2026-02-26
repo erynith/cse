@@ -340,6 +340,12 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
+                val binge = stream?.behaviorHints?.bingeGroup
+
+                if (!binge.isNullOrBlank() && binge.contains("|")) {
+                    stream.infohash = binge.substringAfter("|")
+                }
+
                 stream.runCallback("Torrentio", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
@@ -395,6 +401,12 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
+                val binge = stream?.behaviorHints?.bingeGroup
+
+                if (!binge.isNullOrBlank() && binge.contains("|")) {
+                    stream.infohash = binge.substringAfter("|")
+                }
+
                 stream.runCallback("Comet", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
@@ -439,6 +451,12 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
+                val binge = stream?.behaviorHints?.bingeGroup
+
+                if (!binge.isNullOrBlank() && binge.contains(":")) {
+                    stream.infohash = binge.substringAfter(":")
+                }
+
                 stream.runCallback("StremThru", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
@@ -515,6 +533,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
     )
 
     private data class BehaviorHints(
+        val bingeGroup: String? = null,
         val filename: String? = null,
         val proxyHeaders: ProxyHeaders?,
         val headers: Map<String, String>?,
@@ -526,8 +545,9 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val url: String?,
         val description: String?,
         val behaviorHints: BehaviorHints?,
+        var infohash: String? = null,
         val sources: List<String> = emptyList(),
-        val subtitles: List<Subtitle> = emptyList()
+        val subtitles: List<Subtitle> = emptyList(),
     ) {
         suspend fun runCallback(
             sourceName: String?,
@@ -535,9 +555,8 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
         ) {
-            val filename = behaviorHints?.filename
-            if (!filename.isNullOrBlank()) {
-                if (!shared.add(filename)) {
+            if (!infohash.isNullOrBlank()) {
+                if (!shared.add(infohash)) {
                     return
                 }
             }
