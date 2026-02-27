@@ -341,7 +341,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val url = stream?.url
-                if (!url.isNullOrBlank() && url?.contains("/resolve/")) {
+                if (!url.isNullOrBlank() && url.contains("/resolve/")) {
                     stream.infohash = url.split("/").getOrNull(6)
                 }
 
@@ -514,7 +514,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val url = stream?.url
-                if (!url.isNullOrBlank() && url?.contains("/play/")) {
+                if (!url.isNullOrBlank() && url.contains("/play/")) {
                     stream.infohash = url.split("/").getOrNull(5)
                 }
 
