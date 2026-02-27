@@ -521,7 +521,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 stream.runCallback("Meteor", shared, subtitleCallback, callback)
             }
         }.onFailure { e ->
-            Log.e(name, "Error loading from Meteor")
+            Log.e(name, "Error loading from Meteor")//slow
         }
     }
 
