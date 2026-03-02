@@ -439,6 +439,11 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
 
                 if (!binge.isNullOrBlank() && binge.contains("|")) {
                     stream.infohash = binge.substringAfterLast("|")
+                    val priorityHash = getPriorityHash(imdbId, season, episode)
+                    if (priorityHash != null &&
+                        stream.infohash != null &&
+                        stream.infohash.equals(priorityHash, ignoreCase = false)
+                    ) { stream.priority = true }
                 }
 
                 stream.runCallback("Comet", shared, subtitleCallback, callback)
@@ -489,6 +494,11 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
 
                 if (!binge.isNullOrBlank() && binge.contains(":")) {
                     stream.infohash = binge.substringAfterLast(":")
+                    val priorityHash = getPriorityHash(imdbId, season, episode)
+                    if (priorityHash != null &&
+                        stream.infohash != null &&
+                        stream.infohash.equals(priorityHash, ignoreCase = false)
+                    ) { stream.priority = true }
                 }
 
                 stream.runCallback("StremThru", shared, subtitleCallback, callback)
@@ -551,6 +561,11 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                 val url = stream?.url
                 if (!url.isNullOrBlank() && url.contains("/play/")) {
                     stream.infohash = url.split("/").getOrNull(5)
+                    val priorityHash = getPriorityHash(imdbId, season, episode)
+                    if (priorityHash != null &&
+                        stream.infohash != null &&
+                        stream.infohash.equals(priorityHash, ignoreCase = false)
+                    ) { stream.priority = true }
                 }
 
                 stream.runCallback("Meteor", shared, subtitleCallback, callback)
