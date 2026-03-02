@@ -9,6 +9,8 @@ import com.lagradost.api.Log
 import org.json.JSONObject
 import android.util.Base64
 import com.lagradost.cloudstream3.base64Encode
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -299,13 +301,13 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         return true
     }
 
-    private fun priorityMap: Map<String, String> by lazy {
+    private val priorityMap: Map<String, String> by lazy {
         runBlocking {
             withTimeoutOrNull(5000) {
                 try {
                     val priority = app.get("https://erynith.pages.dev/prio.json").text
-                    val res = Json.parseToJsonElement(priority).jsonObject
-                    res.mapValues { it.value.jsonPrimitive.content }
+                    val res = JSONObject(priority)
+                    res.keys().asSequence().associateWith { key -> res.getString(key) }
                 } catch (e: Exception) {
                     emptyMap()
                 }
@@ -313,7 +315,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         }
     }
 
-    private fun getPriorityHash(imdbId: String?, season: Int?, episode: Int?): String? {
+    fun getPriorityHash(imdbId: String?, season: Int?, episode: Int?): String? {
         if (imdbId == null) return null
         val opt = buildList {
             if (season != null && episode != null) add("$imdbId:$season:$episode")
@@ -584,7 +586,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         val subtitles: List<Subtitle> = emptyList()
     ) {
         suspend fun runCallback(
-            sourceName: String?,
+            source: String?,
             shared: MutableSet<String>,
             subtitleCallback: (SubtitleFile) -> Unit,
             callback: (ExtractorLink) -> Unit
@@ -595,6 +597,8 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                     return
                 }
             }
+
+            var sourceName = source
             if (priority == true) { sourceName = "[P] $sourceName" }
 
             if (url != null) {
