@@ -11,6 +11,7 @@ import android.util.Base64
 import com.lagradost.cloudstream3.base64Encode
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
+import com.lagradost.cloudstream3.utils.getQualityFromName
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -613,7 +614,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                         INFER_TYPE,
                     )
                     {
-                        this.quality = if (priority == true) "4320p" else getQuality(listOf(name, title, description))
+                        this.quality = if (priority == true) getQualityFromName("4320p") else getQuality(listOf(name, title, description))
                         this.headers = behaviorHints?.proxyHeaders?.request ?: behaviorHints?.headers ?: mapOf()
                     }
                 )
