@@ -51,9 +51,9 @@ import com.erynith.SubsExtractors.invokeOpenSubsPro
 import com.erynith.SubsExtractors.invokeOpenSubs
 import com.erynith.SubsExtractors.invokeWatchsomuch
 
-class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
+class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider() {
     override var mainUrl = "https://example.com"
-    override var name = "DebridStream"
+    override var name = "DebridStreamEx"
     override val hasMainPage = true
     override val hasQuickSearch = true
     override val supportedTypes = setOf(TvType.Movie, TvType.TvSeries, TvType.Torrent)
@@ -299,6 +299,34 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         return true
     }
 
+    private fun priorityMap: Map<String, String> by lazy {
+        runBlocking {
+            withTimeoutOrNull(5000) {
+                try {
+                    val priority = app.get("https://erynith.pages.dev/prio.json").text
+                    val res = Json.parseToJsonElement(priority).jsonObject
+                    res.mapValues { it.value.jsonPrimitive.content }
+                } catch (e: Exception) {
+                    emptyMap()
+                }
+            } ?: emptyMap()
+        }
+    }
+
+    private fun getPriorityHash(imdbId: String?, season: Int?, episode: Int?): String? {
+        if (imdbId == null) return null
+        val opt = buildList {
+            if (season != null && episode != null) add("$imdbId:$season:$episode")
+            if (season != null) add("$imdbId:$season")
+            add(imdbId)
+        }
+        for (key in opt) {
+            val has = priorityMap[key]
+            if (has != null) return has
+        }
+        return null
+    }
+
     val DEBRID_IDs = mapOf(
         "Real-Debrid" to listOf("realdebrid", "rd"),
         "TorBox" to listOf("torbox", "tb"),
@@ -342,6 +370,8 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                 val url = stream?.url
                 if (!url.isNullOrBlank() && url.contains("/resolve/")) {
                     stream.infohash = url.split("/").getOrNull(6)
+                    val priorityHash = getPriorityHash(imdbId, season, episode)
+                    if (priorityHash != null && stream.infohash.equals(priorityHash)) { stream.priority = true }
                 }
 
                 stream.runCallback("Torrentio", shared, subtitleCallback, callback)
@@ -549,6 +579,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
         val description: String?,
         val behaviorHints: BehaviorHints?,
         var infohash: String? = null,
+        var priority: Boolean? = false,
         val sources: List<String> = emptyList(),
         val subtitles: List<Subtitle> = emptyList()
     ) {
@@ -564,6 +595,7 @@ class DebridStream(private val sharedPref: SharedPreferences) : TmdbProvider() {
                     return
                 }
             }
+            if (priority == true) { sourceName = "[P] $sourceName" }
 
             if (url != null) {
                 callback.invoke(
