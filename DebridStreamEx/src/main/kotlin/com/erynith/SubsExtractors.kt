@@ -25,7 +25,7 @@ object SubsExtractors {
         } else {
             "series/$imdbId:$season:$episode"
         }
-        app.get("${openSubProAPI}/subtitles/$slug.json", timeout = 10L).parsedSafe<OsResult>()?.subtitles?.map { sub ->
+        app.get("${openSubProAPI}/subtitles/$slug.json", timeout = 3L).parsedSafe<OsResult>()?.subtitles?.map { sub ->
             subtitleCallback.invoke(
                 newSubtitleFile(
                     SubtitleHelper.fromTagToEnglishLanguageName(sub.lang ?: "") ?: sub.lang
@@ -50,7 +50,7 @@ object SubsExtractors {
         } else {
             "series/$imdbId:$season:$episode"
         }
-        app.get("${openSubAPI}/subtitles/$slug.json", timeout = 10L).parsedSafe<OsResult>()?.subtitles?.map { sub ->
+        app.get("${openSubAPI}/subtitles/$slug.json", timeout = 3L).parsedSafe<OsResult>()?.subtitles?.map { sub ->
             subtitleCallback.invoke(
                 newSubtitleFile(
                     SubtitleHelper.fromTagToEnglishLanguageName(sub.lang ?: "") ?: sub.lang

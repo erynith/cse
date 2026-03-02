@@ -367,7 +367,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         }
 
         runCatching {
-            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+            app.get(url, timeout = 3L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val url = stream?.url
@@ -432,7 +432,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         }
 
         runCatching {
-            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+            app.get(url, timeout = 5L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val binge = stream?.behaviorHints?.bingeGroup
@@ -487,7 +487,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         }
 
         runCatching {
-            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+            app.get(url, timeout = 5L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val binge = stream?.behaviorHints?.bingeGroup
@@ -555,7 +555,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
         }
 
         runCatching {
-            app.get(url, timeout = 10L).parsedSafe<StreamsResponse>()
+            app.get(url, timeout = 5L).parsedSafe<StreamsResponse>()
         }.onSuccess { res ->
             res?.streams?.forEach { stream ->
                 val url = stream?.url
