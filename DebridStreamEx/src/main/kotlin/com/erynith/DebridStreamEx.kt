@@ -613,8 +613,8 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                         INFER_TYPE,
                     )
                     {
-                        this.quality=getQuality(listOf(name,title,description))
-                        this.headers=behaviorHints?.proxyHeaders?.request ?: behaviorHints?.headers ?: mapOf()
+                        this.quality = if (priority == true) "4320p" else getQuality(listOf(name, title, description))
+                        this.headers = behaviorHints?.proxyHeaders?.request ?: behaviorHints?.headers ?: mapOf()
                     }
                 )
                 subtitles.map { sub ->
