@@ -373,7 +373,10 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                 if (!url.isNullOrBlank() && url.contains("/resolve/")) {
                     stream.infohash = url.split("/").getOrNull(6)
                     val priorityHash = getPriorityHash(imdbId, season, episode)
-                    if (priorityHash != null && stream.infohash.equals(priorityHash)) { stream.priority = true }
+                    if (priorityHash != null &&
+                        stream.infohash != null &&
+                        stream.infohash.equals(priorityHash, ignoreCase = false)
+                    ) { stream.priority = true }
                 }
 
                 stream.runCallback("Torrentio", shared, subtitleCallback, callback)
