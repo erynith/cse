@@ -617,14 +617,14 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
                 }
             }
 
-            var sourceName = source
+            var sourceName = fixSourceName(name, title, description)
             if (priority == true) { sourceName = "[P] $sourceName" }
 
             if (url != null) {
                 callback.invoke(
                     newExtractorLink(
                         name ?: "",
-                        "⌞ $sourceName ⌝",
+                        "--------------------------------------------------------\n" + sourceName + " |",
                         url,
                         INFER_TYPE,
                     )
