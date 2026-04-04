@@ -618,7 +618,7 @@ class DebridStreamEx(private val sharedPref: SharedPreferences) : TmdbProvider()
             }
 
             var sourceName = fixSourceName(name, title, description)
-            if (priority == true) { sourceName = "[P] $sourceName" }
+            if (priority == true) { sourceName = "[P+] $sourceName" }
 
             if (url != null) {
                 callback.invoke(
