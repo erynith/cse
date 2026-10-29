@@ -42,5 +42,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
     val cloudstream by configurations
-    cloudstream("com.lagradost:cloudstream3:pre-release")
+    cloudstream("com.lagradost:cloudstream3:pre-release")//help
 }
