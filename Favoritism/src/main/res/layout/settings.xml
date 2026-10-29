@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Favoritism Settings"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
+
+            <ImageView
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Save Settings"
+                android:focusable="true"
+                android:padding="5dp" />
+        </LinearLayout>
+
+        <!-- Debrid Services -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Debrid Service"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp" />
+
+        <Spinner
+            android:id="@+id/debrid_service_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:focusable="true"
+            android:nextFocusDown="@id/debrid_key_input" />
+
+        <EditText
+            android:id="@+id/debrid_key_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter API Key"
+            android:inputType="text"
+            android:padding="8dp"
+            android:layout_marginTop="5dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/debrid_service_spinner"
+            android:nextFocusDown="@id/favorites_url_input" />
+
+        <!-- Favorites list URL -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favorites list URL"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A favorites.txt (or old prio.json) to download. Leave empty to only use the list below."
+            android:textSize="12sp"
+            android:alpha="0.7" />
+
+        <EditText
+            android:id="@+id/favorites_url_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="https://example.com/favorites.txt"
+            android:inputType="textUri"
+            android:padding="8dp"
+            android:layout_marginTop="5dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/debrid_key_input"
+            android:nextFocusDown="@id/favorites_local_input" />
+
+        <!-- Local favorites -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Extra favorites (checked before the URL list)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="One per line:  tt1234567  S1E2  infohash  # comment\nScope: S1E2 · S1E2-E8 · S1 · S1-S3 · S1,S3 · leave out for movie/whole show"
+            android:textSize="12sp"
+            android:alpha="0.7" />
+
+        <EditText
+            android:id="@+id/favorites_local_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="4"
+            android:gravity="top|start"
+            android:hint="tt6741278  S4E1  c38beda7bf480f7157b102bddabff8f5373ed0ab  # example"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:typeface="monospace"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:layout_marginTop="5dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/favorites_url_input"
+            android:nextFocusDown="@id/check_btn" />
+
+        <Button
+            android:id="@+id/check_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check list"
+            android:layout_marginTop="10dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/favorites_local_input"
+            android:nextFocusDown="@id/delete_img" />
+
+        <!-- Reset Button -->
+        <Button
+            android:id="@+id/delete_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:layout_marginTop="20dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/check_btn" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
