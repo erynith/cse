@@ -14,10 +14,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import com.lagradost.cloudstream3.Actor
 import com.lagradost.cloudstream3.ActorData
@@ -397,18 +393,6 @@ class Favoritism(private val sharedPref: SharedPreferences) : TmdbProvider() {
     private var remoteUrl: String? = null
     private var remoteRev: Long = -1
     private var remoteLoadedAt = 0L
-    private val preloadScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
-    init {
-        preloadScope.launch {
-            try {
-                val rules = favoriteRules()
-                Log.d(name, "Preloaded ${rules.size} favorite rules")
-            } catch (e: Exception) {
-                Log.e(name, "Favorites preload failed: ${e.message}")
-            }
-        }
-    }
 
     private suspend fun favoriteRules(): List<FavoriteList.Rule> = favoritesLock.withLock {
         val url = sharedPref.getString(PREF_FAV_URL, DEFAULT_FAV_URL)?.trim().orEmpty()
